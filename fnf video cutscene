@@ -1,0 +1,26 @@
+-- video must be in 1280x720
+
+
+local allowCountdown = false
+local allowEnd = false
+local cutsceneEnded = false
+
+function onEndSong()
+	if not allowEnd and isStoryMode then --Block the next song lol
+		startVideo('video');
+		allowEnd = true;
+		return Function_Stop;
+	end
+	return Function_Continue;
+end
+
+function onEndSong()
+    if not lowQuality then
+        if isStoryMode and not cutsceneEnded then
+            startVideo('video');
+            cutsceneEnded = true;
+            return Function_Stop 
+            end
+        end			
+        return Function_Continue;
+end
