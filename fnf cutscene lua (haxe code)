@@ -1,0 +1,59 @@
+-- make animation yourself, it must be play the animation.
+
+
+-- '//', it mean give you information
+
+function onCreate()
+    luaDebugMode = true
+    runHaxeCode([[
+        var countdownStopped = true;
+        setVar('countdownStopped', countdownStopped);
+        
+        var cutsceneHandler:CutsceneHandler = new CutsceneHandler();
+        
+        cutsceneHandler.endTime = 5; // how long the cutscebe runs before it calls the finish callback
+        
+        cutsceneHandler.onStart = function() // calls when the cutscene starts
+        {
+            game.boyfriend.animation.play('hey', true);
+        };
+                
+        cutsceneHandler.finishCallback = function() // calls when the cutscene finishes; when endTime has passed
+        {
+            var countdownStopped = false;
+            setVar('countdownStopped', countdownStopped);
+        
+            game.startCountdown();
+        };
+        
+        cutsceneHandler.timer(3, function()
+        {
+            // creats a graphic + an alphabet
+            
+            var graphic = new FlxSprite(100, 100).makeGraphic(100, 100, 0xFFFFFFFF);
+            graphic.cameras = [game.camHUD];
+            game.add(graphic);
+            cutsceneHandler.push(graphic);
+            
+            var graphicTxt = new Alphabet(graphic.x, 20, 'A White Graphic', true);
+            graphicTxt.cameras = [game.camHUD];
+            game.add(graphicTxt);
+            cutsceneHandler.push(graphicTxt);
+        });
+        
+        cutsceneHandler.timer(4, function()
+        {
+            game.gf.animation.play('cheer', true);
+        });
+        
+        /*
+            Note : Pushing an object to a cutscene handler (eg: cutsceneHandler.push(obj)) will make the game remove said object when the cutscene is finished
+        */
+    ]])
+end
+ 
+function onStartCountdown()
+    if getProperty('countdownStopped') then
+        return Function_Stop
+    end
+end
